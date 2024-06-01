@@ -23,3 +23,12 @@ export const LocationSchema = z.object({
 });
 
 export type Location = z.infer<typeof LocationSchema>;
+
+export const EnemyPokemonSchema = z.object({
+  pokemon: z.object({
+    name: z.string(),
+    url: z.string().url(),
+  }),
+});
+
+export type EnemyPokemon = z.infer<typeof EnemyPokemonSchema>;
