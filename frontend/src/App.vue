@@ -2,11 +2,11 @@
 import { ref, watch } from "vue";
 import { getLocations, getSingleLocation } from "./api";
 import { Locations, Location, EnemyPokemon } from "./modell";
+import Encounter from "./components/Encounter.vue";
 
 const locations = ref<Locations | null>(null);
 const singleLocation = ref<Location | null>(null);
 const randomEnemyPokemon = ref<EnemyPokemon | null>(null);
-//const startGame = ref<boolean>(false);
 const error = ref<string | null>(null);
 
 const handleGetLocations = async () => {
@@ -16,7 +16,6 @@ const handleGetLocations = async () => {
     error.value = "Failed to fetch locations";
   } else {
     locations.value = response.data;
-    //startGame.value = true;
   }
 };
 
@@ -72,11 +71,11 @@ const backToLocations = () => {
   </div>
 
   <div v-else-if="singleLocation">
-    <div>
-      <p>{{ randomEnemyPokemon?.pokemon.name }}</p>
-    </div>
-    <button @click="backToLocations" class="border-2">Back to locations</button>
-    <p v-if="error">{{ error }}</p>
+    <Encounter
+      :enemyPokemon="randomEnemyPokemon!"
+      :errorMessage="error"
+      :back="backToLocations"
+    />
   </div>
 </template>
 

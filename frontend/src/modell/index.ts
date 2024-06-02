@@ -1,4 +1,4 @@
-import { array, z } from "zod";
+import { z } from "zod";
 
 export const LocationsSchema = z.object({
   results: z
