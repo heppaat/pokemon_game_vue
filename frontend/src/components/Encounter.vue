@@ -16,7 +16,7 @@ const getIdFromUrl = (url: string) => {
   return id;
 };
 
-const getImageOfEnemyPokemon = async (url: string) => {
+const fetchImageOfEnemyPokemon = async (url: string) => {
   try {
     const sprite = await getSprite(getIdFromUrl(url));
     enemyPokemonSprite.value = sprite;
@@ -29,7 +29,7 @@ watch(
   () => props.enemyPokemon.url,
   (newUrl) => {
     if (newUrl) {
-      getImageOfEnemyPokemon(newUrl);
+      fetchImageOfEnemyPokemon(newUrl);
     }
   },
   { immediate: true }
