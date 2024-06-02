@@ -15,3 +15,6 @@ export const getSingleLocation = async (url: string) =>
     url: url,
     schema: LocationSchema,
   });
+
+export const getSprite = async (id: string) =>
+  `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;

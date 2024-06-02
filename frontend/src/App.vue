@@ -35,7 +35,8 @@ const getRandomEnemyPokemon = (array: Location) => {
     Math.random() * array.pokemon_encounters.length
   );
 
-  randomEnemyPokemon.value = array.pokemon_encounters[randomIndex];
+  const enemyPokemon = array.pokemon_encounters[randomIndex];
+  randomEnemyPokemon.value = enemyPokemon.pokemon;
 };
 
 watch(singleLocation, (newLocation) => {
