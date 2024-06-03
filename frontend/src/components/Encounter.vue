@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import { getMyPokemons, getSprite } from "../api";
-import { EnemyPokemon, MyPokemons } from "../modell";
+import { EnemyPokemon, MyPokemons, MyPokemon } from "../modell";
 
 const props = defineProps<{
   enemyPokemon: EnemyPokemon;
@@ -12,6 +12,7 @@ const props = defineProps<{
 const enemyPokemonSprite = ref<string | null>(null);
 const errorEncounter = ref<string | null>(null);
 const myPokemons = ref<MyPokemons | null>(null);
+const myChoosenPokemon = ref<MyPokemon | null>(null);
 
 const getIdFromUrl = (url: string) => {
   const id = url.split("/")[6];
@@ -38,6 +39,15 @@ const fetchMyPokemons = async () => {
   }
 };
 
+const handleChooseMyPokemon = (myPokemon: MyPokemon) => {
+  myChoosenPokemon.value = myPokemon;
+  console.log(myChoosenPokemon);
+};
+
+const backToEnemy = () => {
+  myPokemons.value = null;
+};
+
 watch(
   () => props.enemyPokemon.url,
   (newUrl) => {
@@ -62,10 +72,25 @@ watch(
     <p v-if="errorEncounter">{{ errorEncounter }}</p>
   </div>
 
-  <div v-else-if="myPokemons">
+  <div v-else-if="myPokemons && !myChoosenPokemon">
     <div v-for="(myPokemon, index) in myPokemons" :key="index">
       <p>{{ myPokemon.name }}</p>
       <img :src="myPokemon.spriteUrl" alt="myPokemon" />
+      <button @click="handleChooseMyPokemon(myPokemon)" class="border-2">
+        Choose Me
+      </button>
+    </div>
+    <button @click="backToEnemy" class="border-2">Back to enemy</button>
+  </div>
+
+  <div v-else-if="myChoosenPokemon">
+    <div>
+      <p>{{ enemyPokemon.name }}</p>
+      <img :src="enemyPokemonSprite!" alt="enemyPokemon" />
+    </div>
+    <div>
+      <p>{{ myChoosenPokemon.name }}</p>
+      <img :src="myChoosenPokemon.spriteUrl" alt="myPokemon" />
     </div>
   </div>
 </template>

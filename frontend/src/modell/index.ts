@@ -40,3 +40,11 @@ export const MyPokemonsSchema = z
   .array();
 
 export type MyPokemons = z.infer<typeof MyPokemonsSchema>;
+
+export const MyPokemonSchema = z.object({
+  name: z.string(),
+  url: z.string().url(),
+  spriteUrl: z.string().url(),
+});
+
+export type MyPokemon = z.infer<typeof MyPokemonSchema>;
