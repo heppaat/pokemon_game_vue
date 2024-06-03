@@ -2,6 +2,7 @@
 import { ref, watch } from "vue";
 import { getMyPokemons, getSprite } from "../api";
 import { EnemyPokemon, MyPokemons, MyPokemon } from "../modell";
+import Fight from "./Fight.vue";
 
 const props = defineProps<{
   enemyPokemon: EnemyPokemon;
@@ -41,7 +42,6 @@ const fetchMyPokemons = async () => {
 
 const handleChooseMyPokemon = (myPokemon: MyPokemon) => {
   myChoosenPokemon.value = myPokemon;
-  console.log(myChoosenPokemon);
 };
 
 const backToEnemy = () => {
@@ -84,14 +84,11 @@ watch(
   </div>
 
   <div v-else-if="myChoosenPokemon">
-    <div>
-      <p>{{ enemyPokemon.name }}</p>
-      <img :src="enemyPokemonSprite!" alt="enemyPokemon" />
-    </div>
-    <div>
-      <p>{{ myChoosenPokemon.name }}</p>
-      <img :src="myChoosenPokemon.spriteUrl" alt="myPokemon" />
-    </div>
+    <Fight
+      :enemyPokemon="enemyPokemon"
+      :enemyImage="enemyPokemonSprite!"
+      :myChoosenPokemon="myChoosenPokemon"
+    />
   </div>
 </template>
 
