@@ -30,3 +30,13 @@ export const EnemyPokemonSchema = z.object({
 });
 
 export type EnemyPokemon = z.infer<typeof EnemyPokemonSchema>;
+
+export const MyPokemonsSchema = z
+  .object({
+    name: z.string(),
+    url: z.string().url(),
+    spriteUrl: z.string().url(),
+  })
+  .array();
+
+export type MyPokemons = z.infer<typeof MyPokemonsSchema>;

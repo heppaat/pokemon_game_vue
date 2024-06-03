@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
-import { getSprite } from "../api";
-import { EnemyPokemon } from "../modell";
+import { getMyPokemons, getSprite } from "../api";
+import { EnemyPokemon, MyPokemons } from "../modell";
 
 const props = defineProps<{
   enemyPokemon: EnemyPokemon;
@@ -10,6 +10,8 @@ const props = defineProps<{
 }>();
 
 const enemyPokemonSprite = ref<string | null>(null);
+const errorEncounter = ref<string | null>(null);
+const myPokemons = ref<MyPokemons | null>(null);
 
 const getIdFromUrl = (url: string) => {
   const id = url.split("/")[6];
@@ -25,6 +27,17 @@ const fetchImageOfEnemyPokemon = async (url: string) => {
   }
 };
 
+const fetchMyPokemons = async () => {
+  errorEncounter.value = null;
+  const response = await getMyPokemons();
+  if (!response.success) {
+    errorEncounter.value = "Failed to fetch My Pokemons";
+    return;
+  } else {
+    myPokemons.value = response.data;
+  }
+};
+
 watch(
   () => props.enemyPokemon.url,
   (newUrl) => {
@@ -37,14 +50,24 @@ watch(
 </script>
 
 <template>
-  <div>
+  <div v-if="!myPokemons">
     <p>{{ props.enemyPokemon.name }}</p>
     <div v-if="enemyPokemonSprite">
       <img :src="enemyPokemonSprite" :alt="props.enemyPokemon.name" />
     </div>
+    <button @click="props.back" class="border-2">Back to locations</button>
+    <p v-if="props.errorMessage">{{ props.errorMessage }}</p>
+
+    <button @click="fetchMyPokemons" class="border-2">Choose my Pokemon</button>
+    <p v-if="errorEncounter">{{ errorEncounter }}</p>
   </div>
-  <button @click="props.back" class="border-2">Back to locations</button>
-  <p v-if="props.errorMessage">{{ props.errorMessage }}</p>
+
+  <div v-else-if="myPokemons">
+    <div v-for="(myPokemon, index) in myPokemons" :key="index">
+      <p>{{ myPokemon.name }}</p>
+      <img :src="myPokemon.spriteUrl" alt="myPokemon" />
+    </div>
+  </div>
 </template>
 
 <style scoped></style>

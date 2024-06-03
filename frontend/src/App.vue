@@ -24,9 +24,9 @@ const handleGetSingleLocation = async (url: string) => {
   const response = await getSingleLocation(url);
   if (!response.success) {
     error.value = "Failed to fetch single location";
+    return;
   } else {
     singleLocation.value = response.data;
-    console.log(singleLocation.value.pokemon_encounters);
   }
 };
 

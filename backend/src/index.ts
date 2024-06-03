@@ -8,8 +8,10 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/api/myPokemons", async (req, res) => {
-  const myPokemons = await load("data", MyPokemonSchema);
+  const myPokemons = await load("data", MyPokemonSchema.array());
   if (!myPokemons) return res.sendStatus(500);
 
   res.json(myPokemons);
 });
+
+app.listen(3000);
