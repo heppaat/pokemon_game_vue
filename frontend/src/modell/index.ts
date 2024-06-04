@@ -48,3 +48,24 @@ export const MyPokemonSchema = z.object({
 });
 
 export type MyPokemon = z.infer<typeof MyPokemonSchema>;
+
+export const StatsSchema = z.object({
+  stats: z
+    .object({
+      base_stat: z.number(),
+      stat: z.object({
+        name: z.string(),
+      }),
+    })
+    .array(),
+});
+
+export type Stats = z.infer<typeof StatsSchema>;
+
+export const ModifiedStatsSchema = z.object({
+  hp: z.number(),
+  attack: z.number(),
+  defense: z.number(),
+});
+
+export type ModifiedStats = z.infer<typeof ModifiedStatsSchema>;
