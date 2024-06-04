@@ -59,6 +59,49 @@ const fetchStats = async () => {
   }
 };
 
+//The damage is calculated using the following formula: ((((2/5+2)*B*60/D)/50)+2)*Z/255, where B is the attacker's Attack, D is defender's Defense, and Z is a random number between 217 and 255.
+
+const damageFormula = (
+  attack: number,
+  defense: number,
+  randomNumber: number
+) => {
+  const B = attack;
+  const D = defense;
+  const Z = randomNumber;
+
+  const damage = ((((2 / 5 + 2) * B * 60) / D / 50 + 2) * Z) / 255;
+  return damage;
+};
+
+const randomNumberGenerator = () => {
+  const number = Math.floor(Math.random() * (255 - 217 + 1)) + 217;
+  return number;
+};
+
+const handleFight = () => {
+  if (myTurn) {
+    if (
+      myStats.value?.attack === undefined ||
+      enemyStats.value?.defense === undefined
+    )
+      return;
+
+    const damage = damageFormula(
+      myStats.value.attack,
+      enemyStats.value.defense,
+      randomNumberGenerator()
+    );
+    const updatedEnemyHP = enemyStats.value.hp - damage;
+
+    enemyStats.value.hp = updatedEnemyHP;
+    enemyStats.value.attack = enemyStats.value.attack;
+    enemyStats.value.defense = enemyStats.value.defense;
+
+    myTurn.value = false;
+  } else if (!myTurn) {
+  }
+};
 /* watch(
   () => props.myChoosenPokemon.url,
   (newVal) => {
