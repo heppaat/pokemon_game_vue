@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import { getMyPokemons, getSprite } from "../api";
-import { EnemyPokemon, MyPokemons, MyPokemon } from "../modell";
+import { EnemyPokemon, MyPokemons, MyPokemon, Locations } from "../modell";
 import Fight from "./Fight.vue";
 
 const props = defineProps<{
   enemyPokemon: EnemyPokemon;
   errorMessage: string | null;
   back: () => void;
+  backToMainPage: () => void;
 }>();
 
 const enemyPokemonSprite = ref<string | null>(null);
@@ -88,6 +89,8 @@ watch(
       :enemyPokemon="enemyPokemon"
       :enemyImage="enemyPokemonSprite!"
       :myChoosenPokemon="myChoosenPokemon"
+      :backToMainPage="backToMainPage"
+      :myPokemons="myPokemons"
     />
   </div>
 </template>

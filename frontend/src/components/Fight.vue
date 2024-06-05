@@ -1,12 +1,21 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
-import { EnemyPokemon, ModifiedStats, MyPokemon, Stats } from "../modell";
-import { getStats } from "../api";
+import {
+  EnemyPokemon,
+  Locations,
+  ModifiedStats,
+  MyPokemon,
+  MyPokemons,
+  Stats,
+} from "../modell";
+import { addPokemon, getStats } from "../api";
 
 const props = defineProps<{
   enemyPokemon: EnemyPokemon;
   enemyImage: string;
   myChoosenPokemon: MyPokemon;
+  backToMainPage: () => void;
+  myPokemons: MyPokemons;
 }>();
 
 const myTurn = ref<boolean>(true);
@@ -15,6 +24,7 @@ const myStats = ref<ModifiedStats | null>(null);
 const enemyStats = ref<ModifiedStats | null>(null);
 const counter = ref<number>(1);
 const gameEnd = ref<boolean>(false);
+const duplicateError = ref<string | null>(null);
 
 const findStats = (statObject: Stats, statName: string) => {
   let statNumber = 0;
@@ -152,12 +162,43 @@ watch(
   { immediate: true }
 );
  */
+const getIdFromUrl = (url: string) => {
+  const id = url.split("/")[6];
+  return id;
+};
 
 watch(
   () => myStats.value?.hp,
   (newVal) => {
     if (newVal === 0) {
       gameEnd.value = true;
+    }
+  }
+);
+
+watch(
+  () => enemyStats.value?.hp,
+  (newVal) => {
+    if (newVal === 0) {
+      gameEnd.value = true;
+
+      if (
+        props.myPokemons.some(
+          (pokemon) => pokemon.name === props.enemyPokemon.name
+        )
+      ) {
+        duplicateError.value = "This Pokemon is already in your list";
+        return;
+      }
+
+      addPokemon({
+        name: props.enemyPokemon.name,
+        url: props.enemyPokemon.url,
+        spriteUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${getIdFromUrl(
+          props.enemyPokemon.url
+        )}.png`,
+      });
+      duplicateError.value = null;
     }
   }
 );
@@ -187,9 +228,20 @@ watch(
     </div>
   </main>
 
-  <main v-if="gameEnd">
+  <main v-if="gameEnd && !duplicateError">
     <div v-if="myStats?.hp === 0">
       <p>You loose!</p>
+      <button @click="backToMainPage" class="border-2">Start new game</button>
     </div>
+
+    <div v-else-if="enemyStats?.hp === 0">
+      <p>You win! Enemy Pokemon will be added to your own list</p>
+      <button @click="backToMainPage" class="border-2">Start new game</button>
+    </div>
+  </main>
+
+  <main v-else-if="gameEnd && duplicateError">
+    <p>You win! However this Pokemon is already in your list</p>
+    <button @click="backToMainPage" class="border-2">Start new game</button>
   </main>
 </template>

@@ -4,6 +4,8 @@ import {
   LocationSchema,
   MyPokemonsSchema,
   StatsSchema,
+  MyPokemon,
+  MyPokemonSchema,
 } from "../modell";
 
 export const getLocations = async () => {
@@ -36,4 +38,12 @@ export const getStats = async (url: string) =>
     method: "GET",
     url: url,
     schema: StatsSchema,
+  });
+
+export const addPokemon = async (pokemon: MyPokemon) =>
+  safeFetch({
+    method: "POST",
+    url: "http://localhost:3000/api/myPokemons/",
+    payload: pokemon,
+    schema: MyPokemonSchema,
   });

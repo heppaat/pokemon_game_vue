@@ -47,6 +47,7 @@ watch(singleLocation, (newLocation) => {
 
 const backToMainPage = () => {
   locations.value = null;
+  singleLocation.value = null;
 };
 
 const backToLocations = () => {
@@ -76,6 +77,7 @@ const backToLocations = () => {
       :enemyPokemon="randomEnemyPokemon!"
       :errorMessage="error"
       :back="backToLocations"
+      :backToMainPage="backToMainPage"
     />
   </div>
 </template>
