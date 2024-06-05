@@ -24,38 +24,27 @@ const findStats = (statObject: Stats, statName: string) => {
   return statNumber;
 };
 
-const fetchStats = async () => {
+const fetchStats = async (url: string, target: "my" | "enemy") => {
   fightError.value = null;
-  const enemyResponse = await getStats(props.enemyPokemon.url);
-  if (!enemyResponse.success) {
-    fightError.value = "Failed to fetch enemy stats";
-    return;
+  const response = await getStats(url);
+  if (!response.success) {
+    fightError.value = `Failed to fetch ${
+      target === "my" ? "my" : "enemy"
+    } stats`;
   } else {
-    const enemyStatsRawData = enemyResponse.data;
+    const statsRawData = response.data;
 
-    const enemyModifiedStats: ModifiedStats = {
-      hp: findStats(enemyStatsRawData, "hp"),
-      attack: findStats(enemyStatsRawData, "attack"),
-      defense: findStats(enemyStatsRawData, "defense"),
+    const modifedStats: ModifiedStats = {
+      hp: findStats(statsRawData, "hp"),
+      attack: findStats(statsRawData, "attack"),
+      defense: findStats(statsRawData, "defense"),
     };
 
-    enemyStats.value = enemyModifiedStats;
-  }
-  fightError.value = null;
-  const myResponse = await getStats(props.myChoosenPokemon.url);
-  if (!myResponse.success) {
-    fightError.value = "Failed to fetch my stats";
-    return;
-  } else {
-    const myStatsRawData = myResponse.data;
-
-    const myModifiedStats: ModifiedStats = {
-      hp: findStats(myStatsRawData, "hp"),
-      attack: findStats(myStatsRawData, "attack"),
-      defense: findStats(myStatsRawData, "defense"),
-    };
-
-    myStats.value = myModifiedStats;
+    if (target === "my") {
+      myStats.value = modifedStats;
+    } else {
+      enemyStats.value = modifedStats;
+    }
   }
 };
 
@@ -80,7 +69,7 @@ const randomNumberGenerator = () => {
 };
 
 const handleFight = () => {
-  if (myTurn) {
+  if (myTurn.value) {
     if (
       myStats.value?.attack === undefined ||
       enemyStats.value?.defense === undefined
@@ -94,23 +83,55 @@ const handleFight = () => {
     );
     const updatedEnemyHP = enemyStats.value.hp - damage;
 
-    enemyStats.value.hp = updatedEnemyHP;
-    enemyStats.value.attack = enemyStats.value.attack;
-    enemyStats.value.defense = enemyStats.value.defense;
+    enemyStats.value = {
+      hp: updatedEnemyHP,
+      attack: enemyStats.value.attack,
+      defense: enemyStats.value.defense,
+    };
 
     myTurn.value = false;
-  } else if (!myTurn) {
+  } else {
+    if (
+      enemyStats.value?.attack === undefined ||
+      myStats.value?.defense === undefined
+    )
+      return;
+    const damage = damageFormula(
+      enemyStats.value.attack,
+      myStats.value.defense,
+      randomNumberGenerator()
+    );
+
+    const updatedMyHp = myStats.value.hp - damage;
+
+    myStats.value = {
+      hp: updatedMyHp,
+      attack: myStats.value.attack,
+      defense: myStats.value.defense,
+    };
+    myTurn.value = true;
   }
 };
-/* watch(
+
+watch(
   () => props.myChoosenPokemon.url,
   (newVal) => {
     if (newVal) {
-      fetchStats(newVal);
+      fetchStats(newVal, "my");
     }
   },
   { immediate: true }
-); */
+);
+
+watch(
+  () => props.enemyPokemon.url,
+  (newVal) => {
+    if (newVal) {
+      fetchStats(newVal, "enemy");
+    }
+  },
+  { immediate: true }
+);
 
 const changeTurn = () => {
   myTurn.value = !myTurn.value;
@@ -122,16 +143,16 @@ const changeTurn = () => {
     <div>
       <p>{{ props.enemyPokemon.name }}</p>
       <img :src="props.enemyImage" alt="enemyPokemon" />
-      <p>Hp:</p>
-      <p>Attack:</p>
-      <p>Defense:</p>
+      <p>Hp: {{ enemyStats?.hp }}</p>
+      <p>Attack: {{ enemyStats?.attack }}</p>
+      <p>Defense: {{ enemyStats?.defense }}</p>
     </div>
     <div>
       <p>{{ props.myChoosenPokemon.name }}</p>
       <img :src="props.myChoosenPokemon.spriteUrl" alt="myPokemon" />
-      <p>Hp:</p>
-      <p>Attack:</p>
-      <p>Defense:</p>
+      <p>Hp: {{ myStats?.hp }}</p>
+      <p>Attack: {{ myStats?.attack }}</p>
+      <p>Defense: {{ myStats?.defense }}</p>
     </div>
     <p v-if="fightError">{{ fightError }}</p>
   </main>
