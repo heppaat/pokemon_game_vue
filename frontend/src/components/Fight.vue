@@ -14,6 +14,7 @@ const fightError = ref<string | null>(null);
 const myStats = ref<ModifiedStats | null>(null);
 const enemyStats = ref<ModifiedStats | null>(null);
 const counter = ref<number>(1);
+const gameEnd = ref<boolean>(false);
 
 const findStats = (statObject: Stats, statName: string) => {
   let statNumber = 0;
@@ -151,10 +152,19 @@ watch(
   { immediate: true }
 );
  */
+
+watch(
+  () => myStats.value?.hp,
+  (newVal) => {
+    if (newVal === 0) {
+      gameEnd.value = true;
+    }
+  }
+);
 </script>
 
 <template>
-  <main class="flex justify-center gap-10">
+  <main v-if="!gameEnd" class="flex justify-center gap-10">
     <div>
       <p>{{ props.enemyPokemon.name }}</p>
       <img :src="props.enemyImage" alt="enemyPokemon" />
@@ -170,8 +180,16 @@ watch(
       <p>Defense: {{ myStats?.defense }}</p>
     </div>
     <p v-if="fightError">{{ fightError }}</p>
+    <div class="flex">
+      <button @click="handleFight" class="border-2">
+        Round: {{ counter }}
+      </button>
+    </div>
   </main>
-  <div class="flex justify-center mt-10">
-    <button @click="handleFight" class="border-2">Round: {{ counter }}</button>
-  </div>
+
+  <main v-if="gameEnd">
+    <div v-if="myStats?.hp === 0">
+      <p>You loose!</p>
+    </div>
+  </main>
 </template>
