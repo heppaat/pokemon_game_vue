@@ -13,6 +13,7 @@ const myTurn = ref<boolean>(true);
 const fightError = ref<string | null>(null);
 const myStats = ref<ModifiedStats | null>(null);
 const enemyStats = ref<ModifiedStats | null>(null);
+const counter = ref<number>(1);
 
 const findStats = (statObject: Stats, statName: string) => {
   let statNumber = 0;
@@ -81,7 +82,9 @@ const handleFight = () => {
       enemyStats.value.defense,
       randomNumberGenerator()
     );
-    const updatedEnemyHP = enemyStats.value.hp - damage;
+    const updatedEnemyHP = Math.round(
+      Math.max(enemyStats.value.hp - damage, 0)
+    );
 
     enemyStats.value = {
       hp: updatedEnemyHP,
@@ -102,7 +105,7 @@ const handleFight = () => {
       randomNumberGenerator()
     );
 
-    const updatedMyHp = myStats.value.hp - damage;
+    const updatedMyHp = Math.round(Math.max(myStats.value.hp - damage, 0));
 
     myStats.value = {
       hp: updatedMyHp,
@@ -111,6 +114,7 @@ const handleFight = () => {
     };
     myTurn.value = true;
   }
+  counter.value++;
 };
 
 watch(
@@ -133,9 +137,20 @@ watch(
   { immediate: true }
 );
 
-const changeTurn = () => {
-  myTurn.value = !myTurn.value;
-};
+//merged the 2 watch functions
+/* watch(
+  () => [props.myChoosenPokemon.url, props.enemyPokemon.url],
+  ([myPokemonUrl, enemyPokemonUrl]) => {
+    if (myPokemonUrl) {
+      fetchStats(myPokemonUrl, 'my');
+    }
+    if (enemyPokemonUrl) {
+      fetchStats(enemyPokemonUrl, 'enemy');
+    }
+  },
+  { immediate: true }
+);
+ */
 </script>
 
 <template>
@@ -157,8 +172,6 @@ const changeTurn = () => {
     <p v-if="fightError">{{ fightError }}</p>
   </main>
   <div class="flex justify-center mt-10">
-    <button @click="changeTurn" class="border-2">
-      {{ myTurn ? "My Turn" : "Enemy's turn" }}
-    </button>
+    <button @click="handleFight" class="border-2">Round: {{ counter }}</button>
   </div>
 </template>
