@@ -67,7 +67,7 @@ const backToLocations = () => {
       <div class="flex flex-col justify-center items-center">
         <button
           @click="handleGetLocations"
-          class="py-4 px-8 bg-[#645AA4] text-[white] font-bold rounded-md transition duration-200 hover:bg-[#313167] hover:border-[#313167] border-2 mt-10"
+          class="py-3 px-6 bg-[#645AA4] text-[white] font-bold rounded-md transition duration-200 hover:bg-[#313167] hover:border-[#313167] border-2 mt-10"
         >
           Start
         </button>
@@ -76,23 +76,54 @@ const backToLocations = () => {
     <div class="absolute flex justify-center items-center p-10">
       <p
         v-if="error"
-        class="bg-[#B986D7] text-white text-[20px] font-bold p-10 rounded-md"
+        class="bg-[#B986D7] text-white text-[20px] font-bold p-10 rounded-md border-2"
       >
         {{ error }}
       </p>
     </div>
   </section>
 
-  <div v-else-if="locations && !singleLocation">
-    <div v-for="(location, index) in locations?.results" :key="index">
-      <p>{{ location.name }}</p>
-      <button @click="handleGetSingleLocation(location.url)" class="border-2">
-        Choose
-      </button>
+  <section
+    v-else-if="locations && !singleLocation"
+    class="h-screen w-screen flex justify-center items-center relative"
+  >
+    <div class="flex flex-col">
+      <div class="flex justify-center my-5">
+        <h1 class="font-semibold text-[48px]">CHOOSE YOUR AREA</h1>
+      </div>
+      <div class="flex flex-wrap gap-6 justify-center px-6">
+        <div
+          v-for="(location, index) in locations?.results"
+          :key="index"
+          class="flex flex-col bg-[#645AA4] justify-center items-center gap-4 w-[250px] h-[150px] rounded-md hover:scale-105 hover:shadow-md duration-300 hover:border-transparent border-2"
+        >
+          <p class="text-white text-[18px] font-light">{{ location.name }}</p>
+          <button
+            @click="handleGetSingleLocation(location.url)"
+            class="py-2 px-4 bg-[#B986D7] font-medium rounded-md hover:bg-[#313167] hover:text-white duration-200"
+          >
+            Choose
+          </button>
+        </div>
+      </div>
+      <div class="flex justify-center mt-10">
+        <button
+          @click="backToMainPage"
+          class="py-4 px-8 bg-[#203FAF] rounded-md text-white font-semibold hover:bg-[#284ed6] hover:scale-105 duration-200"
+        >
+          Back to main page
+        </button>
+      </div>
     </div>
-    <button @click="backToMainPage" class="border-2">Back to start page</button>
-    <p v-if="error">{{ error }}</p>
-  </div>
+    <div class="absolute flex justify-center items-center p-10">
+      <p
+        v-if="error"
+        class="bg-[#B986D7] text-white text-[20px] font-bold p-10 rounded-md border-2"
+      >
+        {{ error }}
+      </p>
+    </div>
+  </section>
 
   <div v-else-if="singleLocation">
     <Encounter
