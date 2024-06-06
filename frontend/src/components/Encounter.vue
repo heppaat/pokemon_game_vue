@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import { getMyPokemons, getSprite } from "../api";
-import { EnemyPokemon, MyPokemons, MyPokemon, Locations } from "../modell";
+import { EnemyPokemon, MyPokemons, MyPokemon } from "../modell";
 import Fight from "./Fight.vue";
 
 const props = defineProps<{

@@ -3,6 +3,7 @@ import { ref, watch } from "vue";
 import { getLocations, getSingleLocation } from "./api";
 import { Locations, Location, EnemyPokemon } from "./modell";
 import Encounter from "./components/Encounter.vue";
+import pokemon_logo from "./assets/pokemon_logo.png";
 
 const locations = ref<Locations | null>(null);
 const singleLocation = ref<Location | null>(null);
@@ -56,10 +57,31 @@ const backToLocations = () => {
 </script>
 
 <template>
-  <div v-if="!locations">
-    <button @click="handleGetLocations" class="border-2">Start</button>
-    <p v-if="error">{{ error }}</p>
-  </div>
+  <section
+    v-if="!locations"
+    class="h-screen w-screen flex justify-center items-center relative"
+  >
+    <div class="flex flex-col justify-center items-center p-10">
+      <img :src="pokemon_logo" alt="pokemon_main_logo" class="w-auto h-auto" />
+
+      <div class="flex flex-col justify-center items-center">
+        <button
+          @click="handleGetLocations"
+          class="py-4 px-8 bg-[#645AA4] text-[white] font-bold rounded-md transition duration-200 hover:bg-[#313167] hover:border-[#313167] border-2 mt-10"
+        >
+          Start
+        </button>
+      </div>
+    </div>
+    <div class="absolute flex justify-center items-center p-10">
+      <p
+        v-if="error"
+        class="bg-[#B986D7] text-white text-[20px] font-bold p-10 rounded-md"
+      >
+        {{ error }}
+      </p>
+    </div>
+  </section>
 
   <div v-else-if="locations && !singleLocation">
     <div v-for="(location, index) in locations?.results" :key="index">

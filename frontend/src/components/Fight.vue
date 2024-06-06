@@ -2,7 +2,6 @@
 import { ref, watch } from "vue";
 import {
   EnemyPokemon,
-  Locations,
   ModifiedStats,
   MyPokemon,
   MyPokemons,
