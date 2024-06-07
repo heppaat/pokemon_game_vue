@@ -59,7 +59,7 @@ const backToLocations = () => {
 <template>
   <section
     v-if="!locations"
-    class="h-screen w-screen flex justify-center items-center relative"
+    class="h-screen w-screen flex justify-center relative"
   >
     <div class="flex flex-col justify-center items-center p-10">
       <img :src="pokemon_logo" alt="pokemon_main_logo" class="w-auto h-auto" />
@@ -85,7 +85,7 @@ const backToLocations = () => {
 
   <section
     v-else-if="locations && !singleLocation"
-    class="h-screen w-screen flex justify-center items-center relative"
+    class="h-screen w-screen flex justify-center relative"
   >
     <div class="flex flex-col">
       <div class="flex justify-center my-5">
@@ -115,7 +115,7 @@ const backToLocations = () => {
         </button>
       </div>
     </div>
-    <div class="absolute flex justify-center items-center p-10">
+    <div class="absolute flex justify-center p-10">
       <p
         v-if="error"
         class="bg-[#B986D7] text-white text-[20px] font-bold p-10 rounded-md border-2"
@@ -128,7 +128,6 @@ const backToLocations = () => {
   <div v-else-if="singleLocation">
     <Encounter
       :enemyPokemon="randomEnemyPokemon!"
-      :errorMessage="error"
       :back="backToLocations"
       :backToMainPage="backToMainPage"
     />

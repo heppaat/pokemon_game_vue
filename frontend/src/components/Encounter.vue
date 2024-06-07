@@ -6,7 +6,6 @@ import Fight from "./Fight.vue";
 
 const props = defineProps<{
   enemyPokemon: EnemyPokemon;
-  errorMessage: string | null;
   back: () => void;
   backToMainPage: () => void;
 }>();
@@ -61,17 +60,53 @@ watch(
 </script>
 
 <template>
-  <div v-if="!myPokemons">
-    <p>{{ props.enemyPokemon.name }}</p>
-    <div v-if="enemyPokemonSprite">
-      <img :src="enemyPokemonSprite" :alt="props.enemyPokemon.name" />
-    </div>
-    <button @click="props.back" class="border-2">Back to locations</button>
-    <p v-if="props.errorMessage">{{ props.errorMessage }}</p>
+  <section
+    v-if="!myPokemons"
+    class="h-screen w-screen flex justify-center relative"
+  >
+    <div class="flex flex-col">
+      <div class="flex justify-center my-5">
+        <h1 class="font-semibold text-[48px]">YOUR ENEMY</h1>
+      </div>
+      <div
+        class="flex flex-col items-center bg-[#5B7FD0] rounded-md mb-20 border-2"
+      >
+        <p
+          class="bg-[#B986D7] uppercase font-medium p-4 mt-8 rounded-md border-2"
+        >
+          {{ props.enemyPokemon.name }}
+        </p>
+        <div v-if="enemyPokemonSprite">
+          <img
+            :src="enemyPokemonSprite"
+            :alt="props.enemyPokemon.name"
+            class="w-[250px]"
+          />
+        </div>
+      </div>
+      <button
+        @click="props.back"
+        class="py-4 px-8 bg-[#203FAF] rounded-md text-white font-semibold hover:bg-[#284ed6] hover:scale-105 duration-200"
+      >
+        Back to locations
+      </button>
 
-    <button @click="fetchMyPokemons" class="border-2">Choose my Pokemon</button>
-    <p v-if="errorEncounter">{{ errorEncounter }}</p>
-  </div>
+      <button
+        @click="fetchMyPokemons"
+        class="py-4 px-8 bg-[#645AA4] text-[white] font-bold rounded-md transition duration-200 hover:bg-[#313167] hover:border-[#313167] border-2 mt-10"
+      >
+        Choose my Pokemon
+      </button>
+    </div>
+    <div class="absolute flex justify-center p-10">
+      <p
+        v-if="errorEncounter"
+        class="bg-[#B986D7] text-white text-[20px] font-bold p-10 rounded-md border-2"
+      >
+        {{ errorEncounter }}
+      </p>
+    </div>
+  </section>
 
   <div v-else-if="myPokemons && !myChoosenPokemon">
     <div v-for="(myPokemon, index) in myPokemons" :key="index">
