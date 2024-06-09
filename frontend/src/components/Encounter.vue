@@ -108,16 +108,46 @@ watch(
     </div>
   </section>
 
-  <div v-else-if="myPokemons && !myChoosenPokemon">
-    <div v-for="(myPokemon, index) in myPokemons" :key="index">
-      <p>{{ myPokemon.name }}</p>
-      <img :src="myPokemon.spriteUrl" alt="myPokemon" />
-      <button @click="handleChooseMyPokemon(myPokemon)" class="border-2">
-        Choose Me
-      </button>
+  <section
+    v-else-if="myPokemons && !myChoosenPokemon"
+    class="h-screen w-screen flex justify-center"
+  >
+    <div class="flex flex-col">
+      <div class="flex justify-center my-5">
+        <h1 class="font-semibold text-[48px]">YOUR POKEMONS</h1>
+      </div>
+      <div class="flex flex-wrap gap-6 justify-center px-6">
+        <div v-for="(myPokemon, index) in myPokemons" :key="index">
+          <div
+            class="flex flex-col items-center bg-[#5B7FD0] rounded-md border-2"
+          >
+            <p
+              class="bg-[#B986D7] uppercase font-medium p-4 mt-8 rounded-md border-2"
+            >
+              {{ myPokemon.name }}
+            </p>
+            <img :src="myPokemon.spriteUrl" alt="myPokemon" class="w-[250px]" />
+          </div>
+          <div class="flex justify-center">
+            <button
+              @click="handleChooseMyPokemon(myPokemon)"
+              class="py-4 px-8 bg-[#645AA4] text-[white] font-bold rounded-md transition duration-200 hover:bg-[#313167] hover:border-[#313167] border-2 mt-10"
+            >
+              Choose Me
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="flex justify-center">
+        <button
+          @click="backToEnemy"
+          class="py-4 px-8 bg-[#203FAF] rounded-md text-white font-semibold hover:bg-[#284ed6] hover:scale-105 duration-200 mt-20"
+        >
+          Back to enemy
+        </button>
+      </div>
     </div>
-    <button @click="backToEnemy" class="border-2">Back to enemy</button>
-  </div>
+  </section>
 
   <div v-else-if="myChoosenPokemon">
     <Fight
