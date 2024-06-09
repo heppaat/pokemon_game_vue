@@ -131,7 +131,7 @@ watch(
           <div class="flex justify-center">
             <button
               @click="handleChooseMyPokemon(myPokemon)"
-              class="py-4 px-8 bg-[#645AA4] text-[white] font-bold rounded-md transition duration-200 hover:bg-[#313167] hover:border-[#313167] border-2 mt-10"
+              class="py-4 px-8 bg-[#645AA4] text-[white] font-bold rounded-md transition duration-200 hover:bg-[#313167] hover:border-[#313167] border-2 mt-10 mb-10"
             >
               Choose Me
             </button>
@@ -141,7 +141,7 @@ watch(
       <div class="flex justify-center">
         <button
           @click="backToEnemy"
-          class="py-4 px-8 bg-[#203FAF] rounded-md text-white font-semibold hover:bg-[#284ed6] hover:scale-105 duration-200 mt-20"
+          class="py-4 px-8 bg-[#203FAF] rounded-md text-white font-semibold hover:bg-[#284ed6] hover:scale-105 duration-200 mt-10 mb-10"
         >
           Back to enemy
         </button>

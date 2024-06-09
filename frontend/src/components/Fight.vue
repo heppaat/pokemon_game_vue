@@ -204,43 +204,99 @@ watch(
 </script>
 
 <template>
-  <main v-if="!gameEnd" class="flex justify-center gap-10">
-    <div>
-      <p>{{ props.enemyPokemon.name }}</p>
-      <img :src="props.enemyImage" alt="enemyPokemon" />
-      <p>Hp: {{ enemyStats?.hp }}</p>
-      <p>Attack: {{ enemyStats?.attack }}</p>
-      <p>Defense: {{ enemyStats?.defense }}</p>
+  <section v-if="!gameEnd" class="h-screen w-screen">
+    <div class="flex justify-center my-5">
+      <h1 class="font-semibold text-[48px]">YOUR POKEMONS</h1>
     </div>
-    <div>
-      <p>{{ props.myChoosenPokemon.name }}</p>
-      <img :src="props.myChoosenPokemon.spriteUrl" alt="myPokemon" />
-      <p>Hp: {{ myStats?.hp }}</p>
-      <p>Attack: {{ myStats?.attack }}</p>
-      <p>Defense: {{ myStats?.defense }}</p>
+    <div class="flex flex-wrap justify-evenly">
+      <div
+        class="flex flex-col items-center bg-[#5B7FD0] rounded-md mb-20 border-2"
+      >
+        <p
+          class="bg-[#B986D7] uppercase font-medium p-4 mt-8 rounded-md border-2"
+        >
+          {{ props.enemyPokemon.name }}
+        </p>
+        <img :src="props.enemyImage" alt="enemyPokemon" class="w-[250px]" />
+        <p>Hp: {{ enemyStats?.hp }}</p>
+        <p>Attack: {{ enemyStats?.attack }}</p>
+        <p>Defense: {{ enemyStats?.defense }}</p>
+      </div>
+      <div
+        class="flex flex-col items-center bg-[#5B7FD0] rounded-md mb-20 border-2"
+      >
+        <p
+          class="bg-[#B986D7] uppercase font-medium p-4 mt-8 rounded-md border-2"
+        >
+          {{ props.myChoosenPokemon.name }}
+        </p>
+        <img
+          :src="props.myChoosenPokemon.spriteUrl"
+          alt="myPokemon"
+          class="w-[250px]"
+        />
+        <p>Hp: {{ myStats?.hp }}</p>
+        <p>Attack: {{ myStats?.attack }}</p>
+        <p>Defense: {{ myStats?.defense }}</p>
+      </div>
+      <p v-if="fightError">{{ fightError }}</p>
     </div>
-    <p v-if="fightError">{{ fightError }}</p>
-    <div class="flex">
-      <button @click="handleFight" class="border-2">
+    <div class="flex justify-center">
+      <button
+        @click="handleFight"
+        class="py-4 px-8 bg-[#645AA4] text-[white] font-bold rounded-md transition duration-200 hover:bg-[#313167] hover:border-[#313167] border-2 mt-10"
+      >
         Round: {{ counter }}
       </button>
     </div>
-  </main>
+  </section>
 
-  <main v-if="gameEnd && !duplicateError">
+  <section
+    v-if="gameEnd && !duplicateError"
+    class="h-screen w-screen flex justify-center my-5"
+  >
     <div v-if="myStats?.hp === 0">
-      <p>You loose!</p>
-      <button @click="backToMainPage" class="border-2">Start new game</button>
+      <h1 class="font-semibold text-[48px] uppercase text-center">
+        You loose!
+      </h1>
+      <div class="flex justify-center">
+        <button
+          @click="backToMainPage"
+          class="py-4 px-8 bg-[#203FAF] rounded-md text-white font-semibold hover:bg-[#284ed6] hover:scale-105 duration-200 mt-20"
+        >
+          Start new game
+        </button>
+      </div>
     </div>
 
     <div v-else-if="enemyStats?.hp === 0">
-      <p>You win! Enemy Pokemon will be added to your own list</p>
-      <button @click="backToMainPage" class="border-2">Start new game</button>
+      <h1 class="font-semibold text-[48px] uppercase text-center">You win!</h1>
+      <h2 class="font-semibold text-[48px] uppercase text-center">
+        Pokemon will be added to your own list
+      </h2>
+      <div class="flex justify-center">
+        <button
+          @click="backToMainPage"
+          class="py-4 px-8 bg-[#203FAF] rounded-md text-white font-semibold hover:bg-[#284ed6] hover:scale-105 duration-200 mt-20"
+        >
+          Start new game
+        </button>
+      </div>
     </div>
-  </main>
+  </section>
 
-  <main v-else-if="gameEnd && duplicateError">
-    <p>You win! However this Pokemon is already in your list</p>
-    <button @click="backToMainPage" class="border-2">Start new game</button>
-  </main>
+  <section v-else-if="gameEnd && duplicateError" class="h-screen w-screen my-5">
+    <h1 class="font-semibold text-[48px] uppercase text-center">You win!</h1>
+    <h2 class="font-semibold text-[48px] uppercase text-center">
+      However this Pokemon is already in your list
+    </h2>
+    <div class="flex justify-center">
+      <button
+        @click="backToMainPage"
+        class="py-4 px-8 bg-[#203FAF] rounded-md text-white font-semibold hover:bg-[#284ed6] hover:scale-105 duration-200 mt-20"
+      >
+        Start new game
+      </button>
+    </div>
+  </section>
 </template>
